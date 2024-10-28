@@ -13,6 +13,7 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "flagcdn.com" },
       { protocol: "https", hostname: "upload.wikimedia.org" },
       { protocol: "https", hostname: "restcountries.com" },
+      { protocol: "https", hostname: "maps.googleapis.com" },
     ],
   },
 };

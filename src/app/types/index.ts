@@ -28,6 +28,7 @@ export interface Country {
     svg: string;
   };
   timezones: string[];
+  latlng: [number, number]; // Added latitude and longitude
 }
 
 /* The `ExchangeRateResponse` interface in the TypeScript code snippet is defining
