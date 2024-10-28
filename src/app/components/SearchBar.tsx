@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 
 // The `interface SearchBarProps` is defining the type of props that the `SearchBar` component expects to receive. In this case, it specifies that the `SearchBar` component should receive a prop called `onSearch` which is a function that takes a `searchTerm` parameter of type `string` and returns `void` (i.e., does not return anything). This helps in type-checking and ensuring that the correct props are passed to the component.

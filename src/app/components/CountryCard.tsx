@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect } from "react";
 import CurrencyConverter from "./CurrencyConverter";
 import { Country } from "../types";

@@ -1,40 +1,49 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import { Moon, Sun } from "lucide-react";
-import { useLocalStorage } from "react-use";
+
+
+// Hook personnalisé pour l'initialisation côté client
+const useClientSideValue = (key: string, initialValue: boolean) => {
+  const [value, setValue] = useState(initialValue);
+
+  useEffect(() => {
+    const storedValue = localStorage.getItem(key);
+    if (storedValue !== null) {
+      setValue(JSON.parse(storedValue));
+    } else {
+      const prefersDark = window.matchMedia(
+        "(prefers-color-scheme: dark)"
+      ).matches;
+      setValue(prefersDark);
+    }
+  }, [key]);
+
+  return [value, setValue] as const;
+};
 
 const DarkMode = () => {
-  const [storedValue, setStoredValue] = useLocalStorage<boolean>(
-    "dark-mode",
-    undefined
-  );
-  const [dark, setDark] = useState(() => {
-    // Initialisation avec la valeur stockée ou la préférence système
-    if (typeof window === "undefined") return true;
-    if (storedValue !== undefined) return storedValue;
-    return window.matchMedia("(prefers-color-scheme: dark)").matches;
-  });
+  const [dark, setDark] = useClientSideValue("dark-mode", false);
 
   // Effet pour synchroniser le thème avec le DOM
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      document.documentElement.classList.toggle("dark", dark);
-      setStoredValue(dark);
-    }
-  }, [dark, setStoredValue]);
+    document.documentElement.classList.toggle("dark", dark);
+    localStorage.setItem("dark-mode", JSON.stringify(dark));
+  }, [dark]);
 
   // Écoute des changements de préférence système
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
     const handleChange = (e: MediaQueryListEvent) => {
-      if (storedValue === undefined) {
+      if (localStorage.getItem("dark-mode") === null) {
         setDark(e.matches);
       }
     };
 
     mediaQuery.addEventListener("change", handleChange);
     return () => mediaQuery.removeEventListener("change", handleChange);
-  }, [storedValue]);
+  }, [setDark]);
 
   const toggleDark = () => setDark((prev) => !prev);
 

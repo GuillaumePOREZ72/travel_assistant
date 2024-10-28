@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 import type { Map as LeafletMap } from "leaflet";
@@ -57,6 +59,7 @@ const MapComponent = ({ coordinates }: MapProps) => {
 // Charger le composant dynamiquement avec ssr désactivé
 const Map = dynamic(() => Promise.resolve(MapComponent), {
   ssr: false,
+  loading: () =><p>Chargement de la carte...</p>
 });
 
 export default Map;
