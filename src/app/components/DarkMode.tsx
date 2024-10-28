@@ -3,52 +3,40 @@ import { useEffect, useState } from "react";
 import { Moon, Sun } from "lucide-react";
 import { useLocalStorage } from "react-use";
 
-/**
- * A button that toggles the app's color scheme between light and dark modes.
- * The preference is stored in local storage and respects system preferences.
- *
- * @returns A button containing a Moon or Sun icon that can be clicked to toggle
- *   the color scheme.
- */
 const DarkMode = () => {
-  const [dark, setDark] = useState(false);
-  const [value, setValue] = useLocalStorage<boolean>("dark-mode", undefined);
+  const [storedValue, setStoredValue] = useLocalStorage<boolean>(
+    "dark-mode",
+    undefined
+  );
+  const [dark, setDark] = useState(() => {
+    // Initialisation avec la valeur stockée ou la préférence système
+    if (typeof window === "undefined") return true;
+    if (storedValue !== undefined) return storedValue;
+    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+  });
 
-  // Check system preferences on mount
+  // Effet pour synchroniser le thème avec le DOM
   useEffect(() => {
-    const prefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)"
-    ).matches;
-    if (value === undefined) {
-      setDark(prefersDark);
-      setValue(prefersDark);
-    } else {
-      setDark(value);
+    if (typeof window !== "undefined") {
+      document.documentElement.classList.toggle("dark", dark);
+      setStoredValue(dark);
     }
-  }, [setValue, value]);
+  }, [dark, setStoredValue]);
 
-  // Listen for system preference changes
+  // Écoute des changements de préférence système
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
     const handleChange = (e: MediaQueryListEvent) => {
-      if (value === undefined) {
+      if (storedValue === undefined) {
         setDark(e.matches);
-        setValue(e.matches);
       }
     };
 
     mediaQuery.addEventListener("change", handleChange);
     return () => mediaQuery.removeEventListener("change", handleChange);
-  }, [setValue, value]);
+  }, [storedValue]);
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      document.documentElement.classList.toggle("dark", dark);
-    }
-    setValue(dark);
-  }, [dark, setValue]);
-
-  const toggleDark = () => setDark(!dark);
+  const toggleDark = () => setDark((prev) => !prev);
 
   return (
     <button

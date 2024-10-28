@@ -131,10 +131,7 @@ export default function CountryCard({ country }: CountryCardProps) {
             <CurrencyConverter countryCurrency={country.currencies} />
           </div>
         )}
-        {capitalCoordinates && (
-          <Map coordinates={capitalCoordinates} />
-        )}
-        {!capitalCoordinates && <p className="text-gray-600 dark:text-gray-300 pt-6">Coordonnées de la capitale non trouvées.</p>}
+        <Map coordinates={capitalCoordinates} />
       </div>
     </motion.div>
   );

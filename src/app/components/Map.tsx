@@ -18,16 +18,28 @@ const MapComponent = ({ coordinates }: MapProps) => {
 
   useEffect(() => {
     if (coordinates && mapRef.current && !mapInstanceRef.current) {
-      mapInstanceRef.current = L.map(mapRef.current).setView(coordinates, 13);
+      mapInstanceRef.current = L.map(mapRef.current, {
+        center: coordinates,
+        zoom: 13,
+        zoomControl: true, // Add zoom control
+      });
 
       if (apiKey) {
-        L.tileLayer(
-          `https://maps.googleapis.com/maps/api/staticmap?center=${coordinates[0]},${coordinates[1]}&zoom=13&size=600x400&maptype=roadmap&key=${apiKey}`
-        ).addTo(mapInstanceRef.current);
+        const googleLayer = L.tileLayer(
+          `https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}&key=${apiKey}`,
+          {
+            maxZoom: 18,
+            minZoom: 2,
+            subdomains: ["mt0", "mt1", "mt2", "mt3"],
+          }
+        );
+        googleLayer.addTo(mapInstanceRef.current);
       } else {
-        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-          attribution: "© OpenStreetMap contributors",
-        }).addTo(mapInstanceRef.current);
+        const osmLayer = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          maxZoom: 19,
+          minZoom: 2,
+        });
+        osmLayer.addTo(mapInstanceRef.current);
       }
     }
 
