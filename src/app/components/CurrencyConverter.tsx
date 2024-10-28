@@ -1,15 +1,9 @@
 import { useState, useEffect } from "react";
 import { Currency, ExchangeRateResponse } from "../types";
 
-/* The `interface CurrencyConverterProps` is defining the props that the
-`CurrencyConverter` component expects to receive. In this case, it specifies
-that the `CurrencyConverter` component expects a prop called `countryCurrency`
-which should be an object of type `Record<string, Currency>`. */
 interface CurrencyConverterProps {
   countryCurrency: Record<string, Currency>;
 }
-/* The code provided is a React functional component called `CurrencyConverter`.
-Here's a breakdown of what the code does: */
 
 export default function CurrencyConverter({
   countryCurrency,
@@ -56,26 +50,48 @@ export default function CurrencyConverter({
   const convertedAmount = Number(amount) * (exchangeRate || 0);
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow mt-4">
-      <h3 className="text-lg font-semibold mb-4">Convertisseur de devises</h3>
+    <div
+      className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow mt-4 
+      transition-colors duration-300"
+    >
+      <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">
+        Convertisseur de devises
+      </h3>
       <div className="space-y-4">
         <div>
-          <label className="block text-sm text-gray-600 mb-1">Montant</label>
+          <label className="block text-sm text-gray-600 dark:text-gray-300 mb-1">
+            Montant
+          </label>
           <input
             type="text"
             value={amount}
             onChange={handleAmountChange}
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border dark:border-gray-600 
+              bg-white dark:bg-gray-700 
+              text-gray-900 dark:text-white
+              rounded-md 
+              focus:outline-none focus:ring-2 
+              focus:ring-blue-500 dark:focus:ring-blue-400
+              transition-colors duration-200"
           />
         </div>
 
         <div className="flex gap-4">
           <div className="flex-1">
-            <label className="block text-sm text-gray-600 mb-1">De</label>
+            <label className="block text-sm text-gray-600 dark:text-gray-300 mb-1">
+              De
+            </label>
             <select
               value={fromCurrency}
               onChange={(e) => setFromCurrency(e.target.value)}
-              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 
+                border dark:border-gray-600 
+                bg-white dark:bg-gray-700 
+                text-gray-900 dark:text-white
+                rounded-md 
+                focus:outline-none focus:ring-2 
+                focus:ring-blue-500 dark:focus:ring-blue-400
+                transition-colors duration-200"
             >
               <option value="EUR">EUR - Euro</option>
               <option value="USD">USD - Dollar US</option>
@@ -84,11 +100,20 @@ export default function CurrencyConverter({
           </div>
 
           <div className="flex-1">
-            <label className="block text-sm text-gray-600 mb-1">Vers</label>
+            <label className="block text-sm text-gray-600 dark:text-gray-300 mb-1">
+              Vers
+            </label>
             <select
               value={toCurrency}
               onChange={(e) => setToCurrency(e.target.value)}
-              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 
+                border dark:border-gray-600 
+                bg-white dark:bg-gray-700 
+                text-gray-900 dark:text-white
+                rounded-md 
+                focus:outline-none focus:ring-2 
+                focus:ring-blue-500 dark:focus:ring-blue-400
+                transition-colors duration-200"
             >
               {Object.entries(countryCurrency).map(([code, currency]) => (
                 <option key={code} value={code}>
@@ -101,15 +126,19 @@ export default function CurrencyConverter({
 
         {loading ? (
           <div className="text-center py-2">
-            <div className="animate-spin inline-block w-6 h-6 border-t-2 border-blue-500 rounded-full"></div>
+            <div
+              className="animate-spin inline-block w-6 h-6 
+              border-t-2 border-blue-500 dark:border-blue-400 
+              rounded-full"
+            ></div>
           </div>
         ) : (
           <div className="text-center py-2">
-            <p className="text-lg font-semibold">
+            <p className="text-lg font-semibold text-gray-900 dark:text-white">
               {amount} {fromCurrency} = {convertedAmount.toFixed(2)}{" "}
               {toCurrency}
             </p>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-gray-500 dark:text-gray-400">
               1 {fromCurrency} = {exchangeRate?.toFixed(4)} {toCurrency}
             </p>
           </div>

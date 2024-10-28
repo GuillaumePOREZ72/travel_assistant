@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import BackToTopButton from "./components/BackToTopButton";
+
 
 export const metadata: Metadata = {
   title: "Travel App",
@@ -26,10 +28,18 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="fr">
       <head>
-        <title>Travel Planner</title>
-        <meta name="description" content="Application de planification de voyage" />
+        <title className="text-3xl font-bold text-blue-600 animate-pulse">
+          Currency Assistant
+        </title>
+        <meta
+          name="description"
+          content="Application de planification de voyage"
+        />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        <BackToTopButton />
+      </body>
     </html>
   );
 }

@@ -3,3 +3,7 @@
 @tailwind utilities;
 
 
+* {
+  scroll-behavior: smooth; /* Scrolling towards a target element is smooth and progressive. */
+}
+

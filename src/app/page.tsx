@@ -5,20 +5,17 @@ import CountryCard from "./components/CountryCard";
 import SearchBar from "./components/SearchBar";
 import Loading from "./components/Loading";
 import { Country } from "./types";
-import {Roboto} from 'next/font/google'
+import { Roboto } from "next/font/google";
+import DarkMode from "./components/DarkMode";
 
-const roboto = Roboto({ subsets: ['latin'], weight:"400" });
 
-/* This code block is defining a React functional component named `Home`. Here's a
-breakdown of what it does: */
+const roboto = Roboto({ subsets: ["latin"], weight: "400" });
+
 export default function Home() {
   const [countries, setCountries] = useState<Country[]>([]);
   const [filteredCountries, setFilteredCountries] = useState<Country[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
-  /* The `useEffect` hook in the provided code block is responsible for fetching
-  data from an external API endpoint when the component mounts for the first
-  time. Here's a breakdown of what it does: */
   useEffect(() => {
     const fetchCountries = async () => {
       try {
@@ -35,12 +32,6 @@ export default function Home() {
     fetchCountries();
   }, []);
 
-/**
- * The handleSearch function filters countries based on a search term and updates
- * the filtered countries state.
- * @param {string} searchTerm - The `searchTerm` parameter is a string that
- * represents the term that the user is searching for in the list of countries.
- */
   const handleSearch = (searchTerm: string): void => {
     const filtered = countries.filter((country) =>
       country.name.common.toLowerCase().includes(searchTerm.toLowerCase())
@@ -49,12 +40,22 @@ export default function Home() {
   };
 
   return (
-    <main className={`min-h-screen p-8 bg-gray-100 ${roboto.className}`}>
-      <div className="max-w-7xl mx-auto">
-        <h1 className="text-4xl font-bold text-center mb-8 text-blue-600">
-          Travel Planner
-        </h1>
-        <SearchBar onSearch={handleSearch} />
+    <main
+      className={`min-h-screen transition-all duration-300 ease-in-out
+        bg-light-gradient dark:bg-dark-gradient ${roboto.className}`}
+    >
+      <div className="max-w-7xl mx-auto p-8 backdrop-blur-sm dark:backdrop-blur-md">
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-5xl font-bold text-center text-blue-600 dark:text-blue-400 transition-colors">
+            Currency Assistant
+          </h1>
+          <DarkMode />
+        </div>
+
+        <div className="backdrop-blur-sm bg-white/30 dark:bg-gray-900/30 rounded-lg p-4 transition-all">
+          <SearchBar onSearch={handleSearch} />
+        </div>
+
         {loading ? (
           <Loading />
         ) : (
@@ -64,6 +65,7 @@ export default function Home() {
             ))}
           </div>
         )}
+        
       </div>
     </main>
   );
