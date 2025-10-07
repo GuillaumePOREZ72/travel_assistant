@@ -74,7 +74,7 @@ export default function Home() {
       <div className="max-w-7xl mx-auto p-8 backdrop-blur-sm dark:backdrop-blur-md">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-5xl font-bold text-center text-blue-600 dark:text-blue-400 transition-colors">
-            Currency Assistant
+            Travel Currency Assistant
           </h1>
           <DarkMode />
         </div>

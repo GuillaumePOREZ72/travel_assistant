@@ -2,10 +2,12 @@ import type { Metadata } from "next";
 import "./globals.css";
 import BackToTopButton from "./components/BackToTopButton";
 
-
 export const metadata: Metadata = {
-  title: "TTravel Assistant",
-  description: "Application assistant de voyage",
+  title: "Travel Currency Assistant",
+  description: "Application assistant devises de voyage",
+  icons: {
+    icon: "/icon.png",
+  },
 };
 interface RootLayoutProps {
   children: React.ReactNode;
@@ -26,16 +28,7 @@ interface RootLayoutProps {
  */
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang="en">
-      <head>
-        <title className="text-3xl font-bold text-blue-600 animate-pulse">
-          Currency Assistant
-        </title>
-        <meta
-          name="description"
-          content="Application de planification de voyage"
-        />
-      </head>
+    <html lang="fr">
       <body>
         {children}
         <BackToTopButton />

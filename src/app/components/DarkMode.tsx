@@ -3,60 +3,43 @@
 import { useEffect, useState } from "react";
 import { Moon, Sun } from "lucide-react";
 
-
-// Hook personnalisé pour l'initialisation côté client
-const useClientSideValue = (key: string, initialValue: boolean) => {
-  const [value, setValue] = useState(initialValue);
+export default function DarkMode() {
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
 
   useEffect(() => {
-    const storedValue = localStorage.getItem(key);
-    if (storedValue !== null) {
-      setValue(JSON.parse(storedValue));
-    } else {
-      const prefersDark = window.matchMedia(
-        "(prefers-color-scheme: dark)"
-      ).matches;
-      setValue(prefersDark);
-    }
-  }, [key]);
+    const isDark = localStorage.getItem("theme") === "dark";
+    setIsDarkMode(isDark);
+    document.documentElement.classList.toggle("dark", isDark);
+    // 🔧 Ajout pour DaisyUI
+    document.documentElement.setAttribute(
+      "data-theme",
+      isDark ? "dark" : "light"
+    );
+  }, []);
 
-  return [value, setValue] as const;
-};
-
-const DarkMode = () => {
-  const [dark, setDark] = useClientSideValue("dark-mode", false);
-
-  // Effet pour synchroniser le thème avec le DOM
-  useEffect(() => {
-    document.documentElement.classList.toggle("dark", dark);
-    localStorage.setItem("dark-mode", JSON.stringify(dark));
-  }, [dark]);
-
-  // Écoute des changements de préférence système
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    const handleChange = (e: MediaQueryListEvent) => {
-      if (localStorage.getItem("dark-mode") === null) {
-        setDark(e.matches);
-      }
-    };
-
-    mediaQuery.addEventListener("change", handleChange);
-    return () => mediaQuery.removeEventListener("change", handleChange);
-  }, [setDark]);
-
-  const toggleDark = () => setDark((prev) => !prev);
+  const toggleDarkMode = () => {
+    const newMode = !isDarkMode;
+    setIsDarkMode(newMode);
+    localStorage.setItem("theme", newMode ? "dark" : "light");
+    document.documentElement.classList.toggle("dark", newMode);
+    // 🔧 Toggle DaisyUI theme
+    document.documentElement.setAttribute(
+      "data-theme",
+      newMode ? "dark" : "light"
+    );
+  };
 
   return (
     <button
-      onClick={toggleDark}
-      aria-label={dark ? "Activer le mode clair" : "Activer le mode sombre"}
-      className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-      title={dark ? "Passer en mode clair" : "Passer en mode sombre"}
+      onClick={toggleDarkMode}
+      aria-label="Toggle dark mode"
+      className="btn btn-circle btn-ghost"
     >
-      {dark ? <Sun className="h-5 w-5 text-white" /> : <Moon className="h-5 w-5" />}
+      {isDarkMode ? (
+        <Sun className="h-6 w-6 text-white" />
+      ) : (
+        <Moon className="h-6 w-6" />
+      )}
     </button>
   );
-};
-
-export default DarkMode;
+}
