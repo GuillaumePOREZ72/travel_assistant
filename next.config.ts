@@ -8,10 +8,19 @@ images that can be used within the Next.js application. In this case, the
 allowed remote image hosts are `flagcdn.com`, `upload.wikimedia.org`, and
 `restcountries.com`. */
 const nextConfig: NextConfig = {
+  reactStrictMode: true,
   images: {
     remotePatterns: [
-      { protocol: "https", hostname: "flagcdn.com" },
-      { protocol: "https", hostname: "upload.wikimedia.org" },
+      {
+        protocol: "https",
+        hostname: "flagcdn.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "upload.wikimedia.org",
+        pathname: "/**",
+      },
       { protocol: "https", hostname: "restcountries.com" },
       { protocol: "https", hostname: "maps.googleapis.com" },
     ],

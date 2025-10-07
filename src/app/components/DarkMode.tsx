@@ -7,14 +7,14 @@ export default function DarkMode() {
   const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
 
   useEffect(() => {
-    const isDark = localStorage.getItem("theme") === "dark";
+    const savedTheme = localStorage.getItem("theme");
+    const isDark =
+      savedTheme === "dark" ||
+      (!savedTheme &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches);
+
     setIsDarkMode(isDark);
     document.documentElement.classList.toggle("dark", isDark);
-    // 🔧 Ajout pour DaisyUI
-    document.documentElement.setAttribute(
-      "data-theme",
-      isDark ? "dark" : "light"
-    );
   }, []);
 
   const toggleDarkMode = () => {
@@ -22,23 +22,18 @@ export default function DarkMode() {
     setIsDarkMode(newMode);
     localStorage.setItem("theme", newMode ? "dark" : "light");
     document.documentElement.classList.toggle("dark", newMode);
-    // 🔧 Toggle DaisyUI theme
-    document.documentElement.setAttribute(
-      "data-theme",
-      newMode ? "dark" : "light"
-    );
   };
 
   return (
     <button
       onClick={toggleDarkMode}
       aria-label="Toggle dark mode"
-      className="btn btn-circle btn-ghost"
+      className="p-3 rounded-full hover:bg-gray-300 dark:hover:bg-gray-800 transition-colors"
     >
       {isDarkMode ? (
-        <Sun className="h-6 w-6 text-white" />
+        <Sun className="h-7 w-7 text-yellow-400" />
       ) : (
-        <Moon className="h-6 w-6" />
+        <Moon className="h-7 w-7 text-white" />
       )}
     </button>
   );

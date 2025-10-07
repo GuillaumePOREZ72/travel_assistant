@@ -7,7 +7,6 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
 
-// 🔧 FIX 1: Import dynamique de Map pour éviter l'erreur SSR
 const Map = dynamic(() => import("./Map"), {
   ssr: false,
   loading: () => (
@@ -35,25 +34,16 @@ export default function CountryCard({ country }: CountryCardProps) {
   const [showConverter, setShowConverter] = useState<boolean>(false);
   const [imageError, setImageError] = useState<boolean>(false);
 
-  // 🔧 FIX 2: Récupérer les coordonnées directement depuis l'API REST Countries
-  // Plus besoin de Google Maps API !
+  // Récupérer les coordonnées
   let capitalCoordinates: [number, number] | null = null;
 
-  // Option 1: Coordonnées de la capitale (priorité)
   if (
     country.capitalInfo?.latlng &&
     Array.isArray(country.capitalInfo.latlng)
   ) {
     capitalCoordinates = country.capitalInfo.latlng as [number, number];
-  }
-  // Option 2: Coordonnées du centre du pays (fallback)
-  else if (country.latlng && Array.isArray(country.latlng)) {
+  } else if (country.latlng && Array.isArray(country.latlng)) {
     capitalCoordinates = country.latlng as [number, number];
-  }
-
-  // 🔧 FIX 3: Logs conditionnels (dev only) sans info sensible
-  if (process.env.NODE_ENV === "development" && !capitalCoordinates) {
-    console.log(`${country.name.common}: Coordonnées non disponibles`);
   }
 
   return (
@@ -63,7 +53,7 @@ export default function CountryCard({ country }: CountryCardProps) {
       className="bg-white dark:bg-gray-800 rounded-lg shadow-xl overflow-hidden transition-all duration-100 hover:shadow-xl"
     >
       {/* Drapeau */}
-      <div className="relative w-full aspect-[3/2] bg-gray-100 dark:bg-gray-900">
+      <div className="relative w-full aspect-[3/2] bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900">
         {!imageError ? (
           <Image
             src={country.flags.png}
@@ -75,7 +65,7 @@ export default function CountryCard({ country }: CountryCardProps) {
             onError={() => setImageError(true)}
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-gray-200 dark:bg-gray-700">
+          <div className="w-full h-full flex items-center justify-center">
             <span className="text-gray-500 dark:text-gray-400">
               Image non disponible
             </span>
@@ -89,7 +79,6 @@ export default function CountryCard({ country }: CountryCardProps) {
           {country.name.common}
         </h2>
 
-        {/* Informations du pays */}
         <div className="space-y-2">
           <p className="text-gray-600 dark:text-gray-300">
             <span className="font-semibold">Capitale:</span>{" "}
@@ -117,29 +106,30 @@ export default function CountryCard({ country }: CountryCardProps) {
             {country.timezones?.[0] || "N/A"}
           </p>
         </div>
-
-        {/* Bouton convertisseur */}
-        <div className="flex items-center justify-center">
+        <div className="flex justify-center items-center">
           {country.currencies && (
             <button
               onClick={() => setShowConverter(!showConverter)}
-              className="mt-4 px-4 py-2 bg-blue-500 rounded-xl dark:bg-blue-600 text-white hover:bg-blue-600 dark:hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+              className="mt-4 px-4 py-2 bg-blue-500 dark:bg-blue-600 text-white rounded-2xl hover:bg-blue-600 dark:hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
             >
               {showConverter ? "Masquer" : "Afficher"} le convertisseur
             </button>
           )}
         </div>
 
-        {/* Convertisseur de devises */}
         {showConverter && country.currencies && (
           <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg transition-colors">
             <CurrencyConverter countryCurrency={country.currencies} />
           </div>
         )}
 
-        {/* Carte avec coordonnées */}
-        <div className="mt-4 shadow-lg">
-          <Map coordinates={capitalCoordinates} />
+        {/* Carte */}
+        <div className="mt-4">
+          <Map
+            coordinates={capitalCoordinates}
+            cityName={country.capital?.[0]}
+            countryName={country.name.common}
+          />
         </div>
       </div>
     </motion.div>

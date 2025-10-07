@@ -5,11 +5,15 @@ import CountryCard from "./components/CountryCard";
 import SearchBar from "./components/SearchBar";
 import Loading from "./components/Loading";
 import { Country } from "./types";
-import { Roboto } from "next/font/google";
+import { Roboto, Poppins } from "next/font/google";
 import DarkMode from "./components/DarkMode";
 
 const roboto = Roboto({ subsets: ["latin"], weight: "400" });
-
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["700", "900"],
+  display: "swap",
+});
 export default function Home() {
   const [countries, setCountries] = useState<Country[]>([]);
   const [filteredCountries, setFilteredCountries] = useState<Country[]>([]);
@@ -18,21 +22,20 @@ export default function Home() {
   useEffect(() => {
     const fetchCountries = async () => {
       try {
-
         const regions = ["Africa", "Americas", "Asia", "Europe", "Oceania"];
 
         const promises = regions.map((region) =>
-          fetch(`https://restcountries.com/v3.1/region/${region}`)
-            .then(res => {
+          fetch(`https://restcountries.com/v3.1/region/${region}`).then(
+            (res) => {
               if (!res.ok) {
                 throw new Error(`HTTP error! status: ${res.status}`);
               }
               return res.json();
-          })
+            }
+          )
         );
 
         const results = await Promise.all(promises);
-
 
         // Fusionner tous les résultats en un seul tableau
         const allCountries = results.flat();
@@ -73,7 +76,7 @@ export default function Home() {
     >
       <div className="max-w-7xl mx-auto p-8 backdrop-blur-sm dark:backdrop-blur-md">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-5xl font-bold text-center text-blue-600 dark:text-blue-400 transition-colors">
+          <h1 className={`text-5xl font-bold text-blue-600 dark:text-blue-400 ${poppins.className}`}>
             Travel Currency Assistant
           </h1>
           <DarkMode />
