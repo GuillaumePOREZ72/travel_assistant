@@ -4,7 +4,6 @@ import { useState } from "react";
 import CurrencyConverter from "./CurrencyConverter";
 import { Country } from "../types";
 import Image from "next/image";
-import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
 
 const Map = dynamic(() => import("./Map"), {
@@ -21,14 +20,6 @@ const Map = dynamic(() => import("./Map"), {
 interface CountryCardProps {
   country: Country;
 }
-
-const containerVariants = {
-  hover: {
-    scale: 1.02,
-    boxShadow: "0px 0px 10px rgba(0,0,0,0.2)",
-    transition: { duration: 0.1 },
-  },
-};
 
 export default function CountryCard({ country }: CountryCardProps) {
   const [showConverter, setShowConverter] = useState<boolean>(false);
@@ -47,11 +38,8 @@ export default function CountryCard({ country }: CountryCardProps) {
   }
 
   return (
-    <motion.div
-      variants={containerVariants}
-      whileHover="hover"
-      className="bg-white dark:bg-gray-800 rounded-lg shadow-xl overflow-hidden transition-all duration-100 hover:shadow-xl"
-    >
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl overflow-hidden transition-all duration-200 ease-out hover:scale-[1.02] hover:shadow-2xl will-change-transform">
+      
       {/* Drapeau */}
       <div className="relative w-full aspect-[3/2] bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900">
         {!imageError ? (
@@ -62,6 +50,10 @@ export default function CountryCard({ country }: CountryCardProps) {
             className="object-contain"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             priority={false}
+            loading="lazy"
+            quality={75}
+            placeholder="blur"
+            blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNzAwIiBoZWlnaHQ9IjQ3NSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNzAwIiBoZWlnaHQ9IjQ3NSIgZmlsbD0iI2UwZTBlMCIvPjwvc3ZnPg=="
             onError={() => setImageError(true)}
           />
         ) : (
@@ -124,7 +116,7 @@ export default function CountryCard({ country }: CountryCardProps) {
         )}
 
         {/* Carte */}
-        <div className="mt-4">
+        <div className="mt-5">
           <Map
             coordinates={capitalCoordinates}
             cityName={country.capital?.[0]}
@@ -132,6 +124,6 @@ export default function CountryCard({ country }: CountryCardProps) {
           />
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }

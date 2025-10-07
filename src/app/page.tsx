@@ -8,16 +8,25 @@ import { Country } from "./types";
 import { Roboto, Poppins } from "next/font/google";
 import DarkMode from "./components/DarkMode";
 
-const roboto = Roboto({ subsets: ["latin"], weight: "400" });
+const roboto = Roboto({
+  subsets: ["latin"],
+  weight: "400",
+  display: "swap",
+});
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["700", "900"],
   display: "swap",
 });
+
+const CARDS_PER_PAGE = 12;
+
 export default function Home() {
   const [countries, setCountries] = useState<Country[]>([]);
   const [filteredCountries, setFilteredCountries] = useState<Country[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+
+  const [displayCount, setDisplayCount] = useState<number>(CARDS_PER_PAGE);
 
   useEffect(() => {
     const fetchCountries = async () => {
@@ -53,7 +62,6 @@ export default function Home() {
         setLoading(false);
       } catch (error) {
         console.error("Erreur lors de la récupération des pays:", error);
-        // En cas d'erreur, initialiser avec des tableaux vides
         setCountries([]);
         setFilteredCountries([]);
         setLoading(false);
@@ -67,7 +75,16 @@ export default function Home() {
       country.name.common.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredCountries(filtered);
+    setDisplayCount(CARDS_PER_PAGE);
   };
+
+  const handleLoadMore = () => {
+    setDisplayCount((prev) => prev + CARDS_PER_PAGE);
+  };
+
+  const displayedCountries = filteredCountries.slice(0, displayCount);
+
+  const hasMore = displayCount < filteredCountries.length;
 
   return (
     <main
@@ -76,7 +93,9 @@ export default function Home() {
     >
       <div className="max-w-7xl mx-auto p-8 backdrop-blur-sm dark:backdrop-blur-md">
         <div className="flex justify-between items-center mb-8">
-          <h1 className={`text-5xl font-bold text-blue-600 dark:text-blue-400 ${poppins.className}`}>
+          <h1
+            className={`text-5xl font-bold text-blue-600 dark:text-blue-400 ${poppins.className}`}
+          >
             Travel Currency Assistant
           </h1>
           <DarkMode />
@@ -89,11 +108,25 @@ export default function Home() {
         {loading ? (
           <Loading />
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
-            {filteredCountries.map((country) => (
-              <CountryCard key={country.cca3} country={country} />
-            ))}
-          </div>
+          <>
+            {" "}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+              {displayedCountries.map((country) => (
+                <CountryCard key={country.cca3} country={country} />
+              ))}
+            </div>
+            {hasMore && (
+              <div className="flex justify-center mt-8">
+                <button
+                  onClick={handleLoadMore}
+                  className="px-6 py-3 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white rounded-2xl font-semibold transition-colors shadow-lg hover:shadow-xl"
+                >
+                  Charger plus de pays (
+                  {filteredCountries.length - displayCount} restants)
+                </button>
+              </div>
+            )}
+          </>
         )}
       </div>
     </main>

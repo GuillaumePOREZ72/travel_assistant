@@ -28,7 +28,7 @@ export default function DarkMode() {
     <button
       onClick={toggleDarkMode}
       aria-label="Toggle dark mode"
-      className="p-3 rounded-full hover:bg-gray-300 dark:hover:bg-gray-800 transition-colors"
+      className="p-3 rounded-full hover:bg-blue-300 dark:hover:bg-gray-800 transition-colors"
     >
       {isDarkMode ? (
         <Sun className="h-7 w-7 text-yellow-400" />
