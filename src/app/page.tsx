@@ -111,8 +111,12 @@ export default function Home() {
           <>
             {" "}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
-              {displayedCountries.map((country) => (
-                <CountryCard key={country.cca3} country={country} />
+              {displayedCountries.map((country, index) => (
+                <CountryCard
+                  key={country.cca3}
+                  country={country}
+                  isPriority={index < 3}
+                />
               ))}
             </div>
             {hasMore && (

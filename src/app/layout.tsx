@@ -29,6 +29,12 @@ interface RootLayoutProps {
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="fr">
+      <head>
+        <link rel="preconnect" href="https://flagcdn.com" />
+        <link rel="dns-prefetch" href="https://flagcdn.com" />
+        <link rel="preconnect" href="https://restcountries.com" />
+        <link rel="dns-prefetch" href="https://restcountries.com" />
+      </head>
       <body>
         {children}
         <BackToTopButton />

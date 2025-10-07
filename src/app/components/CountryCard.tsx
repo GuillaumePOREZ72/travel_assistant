@@ -4,24 +4,17 @@ import { useState } from "react";
 import CurrencyConverter from "./CurrencyConverter";
 import { Country } from "../types";
 import Image from "next/image";
-import dynamic from "next/dynamic";
-
-const Map = dynamic(() => import("./Map"), {
-  ssr: false,
-  loading: () => (
-    <div className="h-60 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center animate-pulse">
-      <p className="text-gray-500 dark:text-gray-400">
-        Chargement de la carte...
-      </p>
-    </div>
-  ),
-});
+import LazyMap from "./LazyMap";
 
 interface CountryCardProps {
   country: Country;
+  isPriority?: boolean;
 }
 
-export default function CountryCard({ country }: CountryCardProps) {
+export default function CountryCard({
+  country,
+  isPriority = false,
+}: CountryCardProps) {
   const [showConverter, setShowConverter] = useState<boolean>(false);
   const [imageError, setImageError] = useState<boolean>(false);
 
@@ -39,7 +32,6 @@ export default function CountryCard({ country }: CountryCardProps) {
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl overflow-hidden transition-all duration-200 ease-out hover:scale-[1.02] hover:shadow-2xl will-change-transform">
-      
       {/* Drapeau */}
       <div className="relative w-full aspect-[3/2] bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900">
         {!imageError ? (
@@ -49,8 +41,8 @@ export default function CountryCard({ country }: CountryCardProps) {
             fill
             className="object-contain"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            priority={false}
-            loading="lazy"
+            priority={isPriority}
+            loading={isPriority ? "eager" : "lazy"}
             quality={75}
             placeholder="blur"
             blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNzAwIiBoZWlnaHQ9IjQ3NSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNzAwIiBoZWlnaHQ9IjQ3NSIgZmlsbD0iI2UwZTBlMCIvPjwvc3ZnPg=="
@@ -117,7 +109,7 @@ export default function CountryCard({ country }: CountryCardProps) {
 
         {/* Carte */}
         <div className="mt-5">
-          <Map
+          <LazyMap
             coordinates={capitalCoordinates}
             cityName={country.capital?.[0]}
             countryName={country.name.common}
