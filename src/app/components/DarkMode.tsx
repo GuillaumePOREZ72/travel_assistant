@@ -54,7 +54,7 @@ const DarkMode = () => {
       className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
       title={dark ? "Passer en mode clair" : "Passer en mode sombre"}
     >
-      {dark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+      {dark ? <Sun className="h-5 w-5 text-white" /> : <Moon className="h-5 w-5" />}
     </button>
   );
 };

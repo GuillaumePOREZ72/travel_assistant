@@ -18,17 +18,28 @@ export interface Country {
     common: string;
     official: string;
   };
-  cca3: string;
   capital?: string[];
   region: string;
-  currencies?: Record<string, Currency>;
-  languages?: Record<string, string>;
+  currencies?: {
+    [key: string]: {
+      name: string;
+      symbol: string;
+    };
+  };
+  languages?: {
+    [key: string]: string;
+  };
   flags: {
     png: string;
     svg: string;
   };
   timezones: string[];
-  latlng: [number, number]; // Added latitude and longitude
+  cca3: string;
+
+  latlng?: [number, number]; // Added latitude and longitude
+  capitalInfo?: {
+    latlng?: [number, number];
+  };
 }
 
 /* The `ExchangeRateResponse` interface in the TypeScript code snippet is defining
