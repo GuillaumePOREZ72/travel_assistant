@@ -8,8 +8,6 @@ import { Country } from "./types";
 import { Roboto } from "next/font/google";
 import DarkMode from "./components/DarkMode";
 
-
-
 const roboto = Roboto({ subsets: ["latin"], weight: "400" });
 
 export default function Home() {
@@ -20,13 +18,41 @@ export default function Home() {
   useEffect(() => {
     const fetchCountries = async () => {
       try {
-        const response = await fetch("https://restcountries.com/v3.1/all");
-        const data: Country[] = await response.json();
-        setCountries(data);
-        setFilteredCountries(data);
+
+        const regions = ["Africa", "Americas", "Asia", "Europe", "Oceania"];
+
+        const promises = regions.map((region) =>
+          fetch(`https://restcountries.com/v3.1/region/${region}`)
+            .then(res => {
+              if (!res.ok) {
+                throw new Error(`HTTP error! status: ${res.status}`);
+              }
+              return res.json();
+          })
+        );
+
+        const results = await Promise.all(promises);
+
+
+        // Fusionner tous les résultats en un seul tableau
+        const allCountries = results.flat();
+
+        // Vérifier que data est bien un tableau avant de l'utiliser
+        if (Array.isArray(allCountries) && allCountries.length > 0) {
+          setCountries(allCountries);
+          setFilteredCountries(allCountries);
+        } else {
+          console.error("Aucun pays récupéré");
+          setCountries([]);
+          setFilteredCountries([]);
+        }
+
         setLoading(false);
       } catch (error) {
         console.error("Erreur lors de la récupération des pays:", error);
+        // En cas d'erreur, initialiser avec des tableaux vides
+        setCountries([]);
+        setFilteredCountries([]);
         setLoading(false);
       }
     };
@@ -66,7 +92,6 @@ export default function Home() {
             ))}
           </div>
         )}
-        
       </div>
     </main>
   );

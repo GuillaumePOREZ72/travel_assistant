@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import type { Map as LeafletMap } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
+import { log } from "console";
 
 interface MapProps {
   coordinates: [number, number] | null;
@@ -19,7 +20,14 @@ const MapComponent = ({ coordinates }: MapProps) => {
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
   useEffect(() => {
+     console.log(
+      "Map useEffect: coordinates:", coordinates,
+      "apiKey:", apiKey,
+      "mapRef.current:", mapRef.current ? "exists" : "null",
+      "mapInstanceRef.current:", mapInstanceRef.current ? "exists" : "null"
+    );
     if (coordinates && mapRef.current && !mapInstanceRef.current) {
+      console.log("Map useEffect: Initializing map with coordinates:", coordinates);
       mapInstanceRef.current = L.map(mapRef.current, {
         center: coordinates,
         zoom: 13,
@@ -27,6 +35,7 @@ const MapComponent = ({ coordinates }: MapProps) => {
       });
 
       if (apiKey) {
+        console.log("Map useEffect: Using Google Maps with API key");
         const googleLayer = L.tileLayer(
           `https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}&key=${apiKey}`,
           {
@@ -37,6 +46,7 @@ const MapComponent = ({ coordinates }: MapProps) => {
         );
         googleLayer.addTo(mapInstanceRef.current);
       } else {
+        console.log("Map useEffect: Using OpenStreetMap (no API key)");
         const osmLayer = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
           maxZoom: 19,
           minZoom: 2,

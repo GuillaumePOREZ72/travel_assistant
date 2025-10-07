@@ -23,21 +23,49 @@ const containerVariants = {
 export default function CountryCard({ country }: CountryCardProps) {
   const [showConverter, setShowConverter] = useState<boolean>(false);
   const [imageError, setImageError] = useState<boolean>(false);
-  const [capitalCoordinates, setCapitalCoordinates] = useState<[number, number] | null>(null);
+  const [capitalCoordinates, setCapitalCoordinates] = useState<
+    [number, number] | null
+  >(null);
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+
+  console.log(`CountryCard for ${country.name.common} - API Key:`, apiKey); // Vérifier la clé API
 
   useEffect(() => {
     const capital = country.capital?.[0];
-    if (capital && apiKey) {
-      getCapitalCoordinates(capital, apiKey).then(coords => {
-        setCapitalCoordinates(coords);
-      }).catch(error => {
-        console.error("Error fetching coordinates:", error);
-      });
-    }
-  }, [country.capital, apiKey]);
+    console.log(`CountryCard for ${country.name.common} - Capital:`, capital); // Vérifier la capitale
 
-  const getCapitalCoordinates = async (capital: string, apiKey: string): Promise<[number, number] | null> => {
+    if (capital && apiKey) {
+      console.log(
+        `CountryCard for ${country.name.common} - Fetching coordinates for:`,
+        capital
+      );
+      getCapitalCoordinates(capital, apiKey)
+        .then((coords) => {
+          console.log(
+            `CountryCard for ${country.name.common} - Coordinates received:`,
+            coords
+          ); // Voir les coordonnées reçues
+          setCapitalCoordinates(coords);
+        })
+        .catch((error) => {
+          console.error(
+            `CountryCard for ${country.name.common} - Error fetching coordinates:`,
+            error
+          );
+        });
+    } else {
+      console.log(
+        `CountryCard for ${
+          country.name.common
+        } - Not fetching coordinates. Capital: ${capital}, API Key present: ${!!apiKey}`
+      );
+    }
+  }, [country.name.common, country.capital, apiKey]); // Ajout de country.name.common pour des logs plus clairs
+
+  const getCapitalCoordinates = async (
+    capital: string,
+    apiKey: string
+  ): Promise<[number, number] | null> => {
     try {
       const response = await axios.get(
         `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
@@ -74,9 +102,7 @@ export default function CountryCard({ country }: CountryCardProps) {
             onError={() => setImageError(true)}
           />
         ) : (
-          <div
-            className="w-full h-full flex items-center justify-center bg-gray-200 dark:bg-gray-700"
-          >
+          <div className="w-full h-full flex items-center justify-center bg-gray-200 dark:bg-gray-700">
             <span className="text-gray-500 dark:text-gray-400">
               Image non disponible
             </span>
@@ -84,9 +110,7 @@ export default function CountryCard({ country }: CountryCardProps) {
         )}
       </div>
       <div className="p-6">
-        <h2
-          className="text-2xl font-bold mb-4 text-gray-900 dark:text-white transition-colors"
-        >
+        <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white transition-colors">
           {country.name.common}
         </h2>
         <div className="space-y-2">
@@ -127,9 +151,7 @@ export default function CountryCard({ country }: CountryCardProps) {
         )}
 
         {showConverter && country.currencies && (
-          <div
-            className="mt-4 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg transition-colors"
-          >
+          <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg transition-colors">
             <CurrencyConverter countryCurrency={country.currencies} />
           </div>
         )}

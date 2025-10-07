@@ -4,7 +4,7 @@ import BackToTopButton from "./components/BackToTopButton";
 
 
 export const metadata: Metadata = {
-  title: "Travel App",
+  title: "TTravel Assistant",
   description: "Application assistant de voyage",
 };
 interface RootLayoutProps {
@@ -13,7 +13,7 @@ interface RootLayoutProps {
 
 /**
  * The `RootLayout` function is a React component that serves as the layout for a
- * travel planner application in French.
+ * travel planner application.
  * @param {RootLayoutProps}  - The `RootLayout` function is a React component that
  * serves as the root layout for your application. It takes a prop object
  * `RootLayoutProps` as its parameter, which presumably includes a `children`
@@ -26,7 +26,7 @@ interface RootLayoutProps {
  */
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang="fr">
+    <html lang="en">
       <head>
         <title className="text-3xl font-bold text-blue-600 animate-pulse">
           Currency Assistant
