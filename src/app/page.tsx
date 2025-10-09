@@ -96,7 +96,7 @@ export default function Home() {
           <h1
             className={`text-5xl font-bold text-blue-600 dark:text-blue-400 ${poppins.className}`}
           >
-            GlobalRates
+            GlobeRates
           </h1>
           <DarkMode />
         </div>

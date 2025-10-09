@@ -3,7 +3,7 @@ import "./globals.css";
 import BackToTopButton from "./components/BackToTopButton";
 
 export const metadata: Metadata = {
-  title: "GlobalRates",
+  title: "GlobeRates",
   description: "Application assistant devises de voyage",
   icons: {
     icon: "/icon.png",
